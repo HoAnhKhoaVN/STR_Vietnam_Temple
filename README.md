@@ -3,14 +3,19 @@
 
 [Try Demo on our website](https://www.jaided.ai/easyocr)
 ## What's new
-- 11 April 2023 - Version 0.1
+- 22 August 2023 - Version 0.2
+    - Integrate OCR into the pipeline
+    - Recognition for vertical texts.
+    - Postprocessing for vertical texts.
+    
+
+- 11 August 2023 - Version 0.1
     - Code fullflow for STR Chinese Temples.
     - Code backend and fronents for demo.
     - Code postprocessing for final output.
 
 ## What's coming next
-- Recognition for vertical texts.
-- Postprocessing for vertical texts.
+
 - Train more accurate model detection and recognition text
 - Collect and label datasets.
 - Host on server have GPU.
@@ -22,20 +27,35 @@
 3. Clear output canvas when call API
 4. Write code by React
 5. Host on the server
+
+6. Format log file
+7. Delete unnecessary information
+
+
 ### Backend
 1. Host on server
 
 
 ## Input and output
 ### Input
-![Input](input/hoang_phi_cau_doi.jpg)
+![Input](image/input_img.jpg)
 ### Output
-![output](output/hoang_phi_cau_doi.jpg)
+![output](image/output_img.png)
 
 ## Installation
 Install using `pip`
 ``` bash
 pip install -r requirements.txt
+```
+### To use PP-OCR method
+1. Download wheel PyMuPDF from [GG Drive](https://drive.google.com/file/d/1bYdtLr2tkyWZJr-TBSO8MB6w-BZTxkaG/view?usp=drive_link)
+2. Install PyMuPDF
+```sh
+pip install PyMuPDF-1.20.2-cp311-cp311-win_amd64.whl
+```
+3. Install PaddleOCR
+```sh
+pip install paddleocr
 ```
 
 ## Run code

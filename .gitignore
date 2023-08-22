@@ -20,6 +20,8 @@ pylette/__pycache__/color_extraction.cpython-311.pyc
 *.log
 !image/detail_postprocess.png
 !image/fullow_str_temple.png
+!image/input_img.jpg
+!image/output_img.png
 !image/UI.png
 
 !input/
