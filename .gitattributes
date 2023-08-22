@@ -1,0 +1,1 @@
+my_ocr/pp_ocr/download/ch_PP-OCRv3_det_distill_train/best_accuracy.pdparams filter=lfs diff=lfs merge=lfs -text

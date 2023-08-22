@@ -1,0 +1,10 @@
+numpy
+easyocr
+sklearn
+flask
+scikit-learn
+Pillow==9.5.0
+selenium
+tqdm
+pandas
+autolog
