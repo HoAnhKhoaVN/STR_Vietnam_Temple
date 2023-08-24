@@ -11,6 +11,8 @@ __pycache__
 lib/
 *.log
 
+.vscode/*
+
 my_ocr/pp_ocr/download/*
 my_ocr/pp_ocr/download/ch_PP-OCRv3_det_infer/*
 my_ocr/pp_ocr/download/ch_PP-OCRv3_det_distill_train/*
