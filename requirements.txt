@@ -1,6 +1,5 @@
 numpy
 easyocr
-sklearn
 flask
 scikit-learn
 Pillow==9.5.0
@@ -8,3 +7,5 @@ selenium
 tqdm
 pandas
 autolog
+paddleocr
+PyMuPDF-1.20.2-cp311-cp311-win_amd64.whl
