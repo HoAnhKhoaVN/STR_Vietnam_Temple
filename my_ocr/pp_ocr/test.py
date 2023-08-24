@@ -1,6 +1,10 @@
+from log.logger import setup_logger
+setup_logger()
 from paddleocr import PaddleOCR
 from typing import List
 pdocr = PaddleOCR(use_angle_cls=True, lang='ch')
+
+
 def ocr(
     img_path : str
 )-> List:
