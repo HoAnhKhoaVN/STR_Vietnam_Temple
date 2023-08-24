@@ -9,3 +9,4 @@ pandas
 autolog
 paddleocr
 PyMuPDF-1.20.2-cp311-cp311-win_amd64.whl
+paddlepaddle
