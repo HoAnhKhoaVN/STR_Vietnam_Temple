@@ -33,3 +33,4 @@ input/*
 !output
 output/*
 !output/hoang_phi_cau_doi.jpg
+dataset/collect_data/collect_image_temple_to_evaluate/load_cookie.py
