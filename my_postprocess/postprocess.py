@@ -209,9 +209,6 @@ def _postprocess(
     draw = ImageDraw.Draw(pil_image)
     # endregion
 
-    # font_path: Text = 'font/arial.ttf'
-    # font_size = 10
-    # pil_font = ImageFont.truetype(font_path, font_size)
 
     for _dict in list_dict_result:
         # region extract input
@@ -228,6 +225,7 @@ def _postprocess(
         br = (int(br[0]), int(br[1]))
         bl = (int(bl[0]), int(bl[1]))
         # endregion
+        
 
         # region 2. Get image from bbox
         x1, y1 = tl
@@ -253,13 +251,15 @@ def _postprocess(
 
 
         # region 5. Create rectangle
-        draw.rectangle(
-            xy = (tl, br),
+        # draw.rectangle(
+        #     xy = (tl, br),
+        #     fill = bg_color
+        # )
+        draw.polygon(
+            xy=(tl, tr, br, bl),
             fill = bg_color
         )
         # endregion
-
-        
         
         if direction == 'horizontal':
             draw_text_horizontal(
