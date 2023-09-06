@@ -11,6 +11,28 @@ __pycache__
 lib/
 *.log
 
+# .txt
+!*.txt
+*.txt
+requirements.txt
+
+*.plk
+
+# .html
+!*.html
+*.html
+frontend.html
+
+cookie/
+*/backup/
+*/classification/
+*/debug/
+*/img_crawl_fb/
+*/log/
+*/subfolder/
+
+
+
 .vscode/*
 
 my_ocr/pp_ocr/download/*
