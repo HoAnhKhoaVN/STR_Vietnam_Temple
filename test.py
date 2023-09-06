@@ -17,7 +17,7 @@ def rotate_bounding_box(bounding_box, angle):
     x1, y1 = tl
     x2, y2 = br
     cen_x  =x1 + (x2 - x1) //2
-    cen_y = y1 + (y2 - y1) //2
+    cen_y = y1 + (y2 - y1)
     print(cen_x, cen_y)
     center = (cen_x, cen_y)
     rotated_center = rotate_point(center, angle)

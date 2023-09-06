@@ -94,6 +94,6 @@ if __name__ == "__main__":
 
 
     img: Image = process(
-        image_input_file="D:/Master/OCR_Nom/fulllow_ocr_temple/input/vertical_demo.png"
+        image_input_file="D:/Master/OCR_Nom/fulllow_ocr_temple/input/z4664204493229_3bab5caca4147bc229d3f6e7ae25d7b0.jpg"
     )
-    img.save('output/vertical_demo_pdocr.png')
+    img.save('output/z4664204493229_3bab5caca4147bc229d3f6e7ae25d7b0.png')
