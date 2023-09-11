@@ -1,7 +1,7 @@
-# Scene Text Recognition
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Xgdh0_snKMpJz4gn-kLQ8LwA9sTQ-VcQ?usp=sharing)
+<!-- # Scene Text Recognition
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Xgdh0_snKMpJz4gn-kLQ8LwA9sTQ-VcQ?usp=sharing) -->
 
-[Try Demo on our website](https://www.jaided.ai/easyocr)
+[Try Demo on our website](https://str-vietnam-temple.vercel.app)
 ## What's new
 - 11 September 2023 - Version 0.3
     - Skip Latin characters.
