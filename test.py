@@ -99,7 +99,7 @@ if __name__ == "__main__":
   image = cv2.cvtColor(image, cv2.COLOR_RGBA2BGR)
   cv2.rectangle(image, tl, br, (0, 255, 0), 2)
 
-# Polygon corner points coordinates
+  # Polygon corner points coordinates
   pts = np.array(bbox,
                 np.int32)
  
@@ -121,7 +121,7 @@ if __name__ == "__main__":
                         isClosed, color, thickness)
 
 
-  Image.fromarray(image).save('output/cau_doi_1_polygon.png')
+  Image.fromarray(image).save('output/cau_doi_1_polygon_outline.png')
 
     
     

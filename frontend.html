@@ -109,26 +109,26 @@
             document.querySelector('#img-content').style.display = 'block';
             document.querySelector('#img-content img').src = URL.createObjectURL(file)
 
-            const reader = new FileReader();
-            console.log(1)
-            reader.onload = () => {
-                const base64Data = reader.result.split(',')[1];
-                images.base64 = base64Data
+            // const reader = new FileReader();
+            // console.log(1)
+            // reader.onload = () => {
+                // const base64Data = reader.result.split(',')[1];
+                // images.base64 = base64Data
                 // console.log(base64Data)
-            };
+            // };
             // Đọc file như một URL dạng Data URL
-            reader.readAsDataURL(file);
-        });
+            // reader.readAsDataURL(file);
+        // });
 
 
 
 
         convertButton.addEventListener("click", function (event) {
-            // const formData = new FormData();
+            const formData = new FormData();
             // console.log(images.base64)
-            // formData.append("base64Data", images.base64);
-            let abc = JSON.stringify({ "base64Data": images.base64 }) 
-            console.log(abc)
+            formData.append("base64Data", images.base64);
+            // let abc = JSON.stringify({ "base64Data": images.base64 }) 
+            // console.log(abc)
 
             $.ajax({
                 type: "POST",

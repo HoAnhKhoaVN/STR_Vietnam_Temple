@@ -14,3 +14,4 @@ wget
 bs4
 lxml
 requests
+opencc

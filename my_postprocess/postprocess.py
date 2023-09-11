@@ -16,7 +16,10 @@ def postprocess_text(text: Text):
     return text
 
 # SRC: https://gist.github.com/Ze1598/420c7eb600899c86d1d65e83c3cc8b25
-def get_text_dimensions(text_string, font):
+def get_text_dimensions(
+    text_string: str,
+    font: ImageFont
+    ):
     # https://stackoverflow.com/a/46220683/9263761
     ascent, descent = font.getmetrics()
 
@@ -82,11 +85,6 @@ def rotate_vertical_bbox_rectange(
     x_br = cen_x + half_height
     y_br = cen_y + half_width
     print(f'br: {(x_br, y_br)}')
-
-    # second = (x_br, y_tl)
-    # fourth = (x_tl, y_br)
-
-    # return ((x_tl, y_tl), second, (x_br, y_br), fourth)
     return ((x_tl, y_tl),(x_br, y_br))
 
 def check_bbox_is_horizontal_rectangle(
@@ -186,8 +184,6 @@ def draw_text_vertical(
     position = (x_pos, y_pos)
     # endregion
 
-    
-
     # region draw text
     draw.text(
         position,
@@ -231,6 +227,9 @@ def _postprocess(
         x1, y1 = tl
         x2,y2 = br
         cropped_image = pil_image.crop((x1, y1, x2, y2))
+        # cropped_polygon_img = pil_image.
+        # width_image = x2 - x1
+        # height_image = y2 - y1
         # endregion
 
         # region 3. Get backgroud and foregroud color
@@ -287,12 +286,10 @@ def _postprocess(
                 sizes.append(size)
                 _tl = (_tl[0], _tl[1]+ kc + padding)
             # endregion
-            print(f'bboxes: {bboxes}')
 
             # region Get min text size
             lst_font_size = []
             lst_text = text.split()
-            print(f'text: {lst_text}')
 
             for bbox, text, (height, width) in zip(bboxes, lst_text, sizes):
                 _, _, font_size= check_text_size(
@@ -304,11 +301,9 @@ def _postprocess(
                 lst_font_size.append(font_size)
 
             font_size = min(lst_font_size)
-            print(f'Font_size: {font_size}')
             # endregion
             
             # Xac dinh va viet tung chu vao
-            print(f'text: {text}')
             for bbox, text in zip(bboxes, lst_text):
                 draw_text_vertical(
                     text = text,
