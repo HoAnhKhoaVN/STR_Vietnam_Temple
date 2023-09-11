@@ -19,10 +19,12 @@ requirements.txt
 *.plk
 
 # .html
-!*.html
-*.html
-frontend_call_api.html
-frontend_demo.html
+# !*.html
+# *.html
+# frontend_call_api.html
+# frontend_demo.html
+*/page_src/*
+dataset/collect_data/collect_image_temple_to_evaluate/page_src/
 
 cookie/
 */backup/
