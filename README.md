@@ -3,6 +3,10 @@
 
 [Try Demo on our website](https://www.jaided.ai/easyocr)
 ## What's new
+- 11 September 2023 - Version 0.3
+    - Skip Latin characters.
+    - Expand bounding box following by polygons instead in rectangles
+
 - 22 August 2023 - Version 0.2
     - Integrate OCR into the pipeline
     - Recognition for vertical texts.
