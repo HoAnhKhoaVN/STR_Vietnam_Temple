@@ -1,5 +1,6 @@
 import argparse
 import os
+from utils.check_language import is_han_nom
 # from my_ocr.easyocr import ocr
 from my_ocr.pp_ocr.test import ocr
 # from translate.hvdict import hvdic_translate
@@ -43,6 +44,15 @@ def process(
         print(f'bbox: {bbox}')
         print(f'text: {han_nom_script}')
         logging.debug(f"han_nom_script : {han_nom_script}")
+        
+        # region check is latin characters
+        if not is_han_nom(han_nom_script):
+            if not silent:
+                print(f'==> {han_nom_script} is Latin characters!!!')
+            continue
+
+        # endregion
+
         # translation_script = hvdic_translate(text = han_nom_script)
         translation_script = hcmus_translate(text = han_nom_script)
         list_dict_result.append({
@@ -112,9 +122,9 @@ if __name__ == "__main__":
 
 
     img, time_analysis = process(
-        image_input_file="D:/Master/OCR_Nom/fulllow_ocr_temple/input/13925854_308100976209095_8956468595154727390_o.jpg",
+        image_input_file="D:/Master/OCR_Nom/fulllow_ocr_temple/input/13718780_847719332039821_170320190789157617_n.jpg",
     )
 
-    img.save('output/13925854_308100976209095_8956468595154727390_o.png')
+    img.save('output/13718780_847719332039821_170320190789157617_n.png')
 
     print(f'Time analysis: {time_analysis}')

@@ -1,13 +1,14 @@
-import string
+import re
 
-def is_check_latin_or_printable_char(
+def is_han_nom(
     text: str
 )-> bool:
-    for c in text:
-        if c.isalnum() or c in string.printable:
-            return True
-    return False
+    '''
+    Hint: https://stackoverflow.com/questions/34587346/python-check-if-a-string-contains-chinese-character
+    '''
+    return len(re.findall(r'[\u4e00-\u9fff]+', text)) != 0
 
 if __name__ == '__main__':
     text ='蛇龍動易'
-    print(is_check_latin_or_printable_char(text))
+    # text = 'NAMCAO'
+    print(is_han_nom(text))
