@@ -21,7 +21,8 @@ requirements.txt
 # .html
 !*.html
 *.html
-frontend.html
+frontend_call_api.html
+frontend_demo.html
 
 cookie/
 */backup/
