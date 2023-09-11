@@ -1,4 +1,4 @@
-INPUT='input'
-OUTPUT='output_demo'
+INPUT='input_demo'
+OUTPUT='output_demo_2'
 
 python predict.py -i $INPUT -o $OUTPUT 
