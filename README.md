@@ -1,8 +1,15 @@
 <!-- # Scene Text Recognition
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Xgdh0_snKMpJz4gn-kLQ8LwA9sTQ-VcQ?usp=sharing) -->
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1BHbTpH1p2AQoqsexOa8nIFXn7q_l-MKS?usp=sharing) -->
 
 [Try Demo on our website](https://str-vietnam-temple.vercel.app)
 ## What's new
+- 27 September 2023 - Version 0.4
+    - Rotate the text according to the rotation angle of the bbox.
+    - Change the method for determining background and foreground colors.
+    - Add time to inference.
+    - Add code to run on [Google Colab](https://colab.research.google.com/drive/1BHbTpH1p2AQoqsexOa8nIFXn7q_l-MKS?usp=sharing)
+    - [Report](https://drive.google.com/file/d/1kZxKnXpIywnqi4kAFb-roqLnbHNgTs3J/view?usp=sharing)
+
 - 11 September 2023 - Version 0.3
     - Skip Latin characters.
     - Expand bounding box following by polygons instead in rectangles
@@ -26,15 +33,9 @@
 
 ## Todo
 ### GUI
-1. Show time to inference
-2. Add download functionality
-3. Clear output canvas when call API
-4. Write code by React
-5. Host on the server
-
-6. Format log file
-7. Delete unnecessary information
-
+- Show time to inference
+- Format log file
+- Delete unnecessary information
 
 ### Backend
 1. Host on server
@@ -61,6 +62,40 @@ pip install PyMuPDF-1.20.2-cp311-cp311-win_amd64.whl
 ```sh
 pip install paddleocr
 ```
+### Install in Azure server
+1. Install paddlepaddle
+- Without GPU
+
+``sh 
+python -m pip install paddlepaddle -i https://pypi.tuna.tsinghua.edu.cn/simple
+``
+- With GPU
+``sh
+python -m pip install paddlepaddle-gpu -i https://pypi.tuna.tsinghua.edu.cn/simple
+``
+SRC: https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/doc/doc_en/quickstart_en.md
+
+2. Install paddleocr
+``sh
+pip install "paddleocr>=2.0.1" --upgrade PyMuPDF==1.21.1
+``
+Thanks: https://stackoverflow.com/questions/76379293/how-can-i-fix-the-error-in-pymupdf-when-installing-paddleocr-with-pip
+
+3. Install sklearn
+``sh
+pip install scikit-learn
+``
+4. Update libgomp1
+``sh
+apt-get install libgomp1
+``
+Thanks: https://stackoverflow.com/questions/43764624/importerror-libgomp-so-1-cannot-open-shared-object-file-no-such-file-or-direc
+
+5. Update ffmpeg libsm6 libxext6 library
+``sh
+apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+``
+Thanks: https://stackoverflow.com/questions/55313610/importerror-libgl-so-1-cannot-open-shared-object-file-no-such-file-or-directo
 
 ## Run code
 Change input and output path in `run.sh`. Then run this command:
