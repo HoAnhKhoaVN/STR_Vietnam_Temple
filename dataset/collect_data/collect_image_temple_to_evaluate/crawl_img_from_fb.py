@@ -93,7 +93,7 @@ def main():
     with open('page_source_v2.html', 'w', encoding='utf-8') as f:
         f.write(driver.page_source)
 
-    exit(0)
+    # exit(0)
     print(f'Starting download image')
 
     # region Get all link image
