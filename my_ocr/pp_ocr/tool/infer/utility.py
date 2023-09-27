@@ -24,7 +24,7 @@ import math
 from paddle import inference
 import time
 import random
-from ppocr.utils.logging import get_logger
+from my_logging import get_logger
 
 
 def str2bool(v):
@@ -434,18 +434,24 @@ def draw_ocr_box_txt(image,
     return np.array(img_show)
 
 
-def draw_box_txt_fine(img_size, box, txt, font_path="./doc/fonts/simfang.ttf"):
+def draw_box_txt_fine(
+    img_size: tuple[int, int],
+    box: list[tuple],
+    txt: str,
+    font_path: str ="./doc/fonts/simfang.ttf"):
+    # region Get height and width
     box_height = int(
         math.sqrt((box[0][0] - box[3][0])**2 + (box[0][1] - box[3][1])**2))
     box_width = int(
         math.sqrt((box[0][0] - box[1][0])**2 + (box[0][1] - box[1][1])**2))
+    # endregion
 
-    if box_height > 2 * box_width and box_height > 30:
+    if box_height > 2 * box_width and box_height > 30:# ???
         img_text = Image.new('RGB', (box_height, box_width), (255, 255, 255))
         draw_text = ImageDraw.Draw(img_text)
         if txt:
             font = create_font(txt, (box_height, box_width), font_path)
-            draw_text.text([0, 0], txt, fill=(0, 0, 0), font=font)
+            draw_text.text([0, 0], txt, fill=(0, 0, 0), font=font) # Sao vẽ ở vị trí (0,0)
         img_text = img_text.transpose(Image.ROTATE_270)
     else:
         img_text = Image.new('RGB', (box_width, box_height), (255, 255, 255))
@@ -454,10 +460,14 @@ def draw_box_txt_fine(img_size, box, txt, font_path="./doc/fonts/simfang.ttf"):
             font = create_font(txt, (box_width, box_height), font_path)
             draw_text.text([0, 0], txt, fill=(0, 0, 0), font=font)
 
+    # region Ánh xạ tọa độ
     pts1 = np.float32(
         [[0, 0], [box_width, 0], [box_width, box_height], [0, box_height]])
+    
     pts2 = np.array(box, dtype=np.float32)
     M = cv2.getPerspectiveTransform(pts1, pts2)
+    # endregion
+
 
     img_text = np.array(img_text, dtype=np.uint8)
     img_right_text = cv2.warpPerspective(
@@ -661,6 +671,27 @@ def check_gpu(use_gpu):
     if use_gpu and not paddle.is_compiled_with_cuda():
         use_gpu = False
     return use_gpu
+
+def _check_image_file(path):
+    img_end = {'jpg', 'bmp', 'png', 'jpeg', 'rgb', 'tif', 'tiff', 'gif', 'pdf'}
+    return any([path.lower().endswith(e) for e in img_end])
+
+def get_image_file_list(img_file):
+    imgs_lists = []
+    if img_file is None or not os.path.exists(img_file):
+        raise Exception("not found any img file in {}".format(img_file))
+
+    if os.path.isfile(img_file) and _check_image_file(img_file):
+        imgs_lists.append(img_file)
+    elif os.path.isdir(img_file):
+        for single_file in os.listdir(img_file):
+            file_path = os.path.join(img_file, single_file)
+            if os.path.isfile(file_path) and _check_image_file(file_path):
+                imgs_lists.append(file_path)
+    if len(imgs_lists) == 0:
+        raise Exception("not found any img file in {}".format(img_file))
+    imgs_lists = sorted(imgs_lists)
+    return imgs_lists
 
 
 if __name__ == '__main__':

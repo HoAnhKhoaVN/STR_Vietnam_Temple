@@ -1,7 +1,6 @@
 # from log.logger import setup_logger
 # setup_logger()
 from paddleocr import PaddleOCR
-from typing import List
 pdocr = PaddleOCR(use_angle_cls=True, lang='ch')
 from time import time
 
@@ -9,7 +8,7 @@ from time import time
 def ocr(
     img_path : str,
     time_analysis: dict = {}
-)-> List:
+)-> list:
     s = time()
     result = pdocr.ocr(img_path, cls=True)[0]
     e = time()

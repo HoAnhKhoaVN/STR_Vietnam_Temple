@@ -28,13 +28,13 @@ import json
 import time
 import logging
 from PIL import Image
-import tools.infer.utility as utility
-import tools.infer.predict_rec as predict_rec
-import tools.infer.predict_det as predict_det
-import tools.infer.predict_cls as predict_cls
-from ppocr.utils.utility import get_image_file_list, check_and_read
-from ppocr.utils.logging import get_logger
-from tools.infer.utility import draw_ocr_box_txt, get_rotate_crop_image, get_minarea_rect_crop
+import utility as utility
+import predict_rec as predict_rec
+import predict_det as predict_det
+import predict_cls as predict_cls
+from utility import get_image_file_list, check_and_read
+from my_logging import get_logger
+from utility import draw_ocr_box_txt, get_rotate_crop_image, get_minarea_rect_crop
 logger = get_logger()
 
 
@@ -175,7 +175,7 @@ def main(args):
         img, flag_gif, flag_pdf = check_and_read(image_file)
         if not flag_gif and not flag_pdf:
             img = cv2.imread(image_file)
-        if not flag_pdf:
+        if not flag_pdf: # handle PDF
             if img is None:
                 logger.debug("error in loading image:{}".format(image_file))
                 continue
