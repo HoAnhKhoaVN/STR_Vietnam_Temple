@@ -71,6 +71,6 @@ if __name__ == '__main__':
     # cv2.destroyAllWindows()
 
     # cv2.imwrite(
-    #     filename= "D:/Master/OCR_Nom/deploy/azure/str_vietnam_temple/experiment/cropped.png",
+    #     filename= "D:/Master/OCR_Nom/deploy/azure/str_vietnam_temple/rotation/cropped.png",
     #     img = cropped
     # )

@@ -8,11 +8,11 @@ from pylette.color_extraction import get_bg_fg_color
 from translate_to_modern_vietnamese.translate_to_modern_vietnamese import translate_to_modern_vietnamese
 # from log.logger import setup_logger
 import logging
-from experiment.calc_angle_between_2_line import calculate_angle_between_line
-from experiment.crop_image import crop_image_polygon
-from experiment.distance import euclidean_distance
-from experiment.equation_line import get_para_in_line
-from experiment.calc_angle_between_2_line import calculate_angle_between_line
+from rotation.calc_angle_between_2_line import calculate_angle_between_line
+from rotation.crop_image import crop_image_polygon
+from rotation.distance import euclidean_distance
+from rotation.equation_line import get_para_in_line
+from rotation.calc_angle_between_2_line import calculate_angle_between_line
 import cv2
 import os
 import numpy as np
@@ -901,7 +901,7 @@ def _postprocess(
 if __name__ == "__main__":
     # region Input
     res = [{'bbox': [[117, 99], [217, 74], [284, 353], [184, 378]], 'text': 'Tĩnh Lan'}]
-    TGT = 'experiment/'
+    TGT = 'rotation/'
     image_path = 'input_demo/test_image.jpg'
     # endregion
 
