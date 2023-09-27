@@ -47,6 +47,8 @@ def extract_colors(image, palette_size=5, resize=True, mode="KM", sort_mode=None
     # open the image
     if isinstance(image, str):
         img = Image.open(image).convert("RGB")
+    elif isinstance(image, np.ndarray):
+        img = Image.fromarray(image).convert("RGB")
     else:
         img = image.convert("RGB")
     if resize:
