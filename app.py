@@ -5,8 +5,10 @@ from PIL import Image
 from numpy import array
 from main import process
 import logging
-from log.logger import setup_logger
-setup_logger()
+# from log.logger import setup_logger
+from numpy.random import uniform
+from numpy import uint8
+# setup_logger()
 
 app = Flask(__name__)
 
@@ -34,4 +36,13 @@ def predict():
     return response
 
 if __name__ == '__main__':
+    # region warm up 10 times
+    print(f'Warm up 10 times')
+    img = uniform(0, 255, [640, 640, 3]).astype(uint8)
+    for i in range(10):
+        res, _ = process(img)
+    # endregion
+
+    # region Main process
     app.run()
+    # endregion
