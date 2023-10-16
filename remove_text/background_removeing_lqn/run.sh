@@ -1,0 +1,1 @@
+where cl >nul 2>nul || "%VS140COMNTOOLS%vsvars32.bat"

@@ -1,0 +1,1 @@
+python3 compare_run_time.py
