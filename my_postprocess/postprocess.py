@@ -17,6 +17,7 @@ import cv2
 import os
 import numpy as np
 import math
+from remove_text.src.core import process_inpaint
 # setup_logger()
 
 def voting_rgb(
@@ -351,7 +352,7 @@ def draw_text_horizontal_each_word(
       tmp_img = Image.new(
         mode = 'RGB',
         size = (w_text, h_text),
-        color = bg_color
+        color = (0,0,0,0)
       )
       # endregion
 
@@ -372,7 +373,6 @@ def draw_text_horizontal_each_word(
       tmp_img = tmp_img.rotate(
         angle= angle,
         expand= True,
-        fillcolor= bg_color,
       )
       # endregion
 
@@ -414,20 +414,20 @@ def draw_text_horizontal_full_word(
     
     # region 2.3: Tạo một ảnh giả có kích thước bằng với độ dài và rộng của văn bản
     tmp_img = Image.new(
-        mode = 'RGB',
+        mode = 'RGBA',
         size = (w_text, h_text),
-        color = bg_color
+        color = (0,0,0,0)
     )
     # endregion
 
     # region 2.4: Viết văn bản
     tmp_draw = ImageDraw.Draw(tmp_img)
     tmp_draw.text(
-    xy= (0,0),
-    text = text,
-    align= 'center',
-    font= font,
-    fill= fg_color
+        xy= (0,0),
+        text = text,
+        align= 'center',
+        font= font,
+        fill= fg_color
     )
     
 
@@ -437,7 +437,6 @@ def draw_text_horizontal_full_word(
     tmp_img = tmp_img.rotate(
     angle= angle,
     expand= True,
-    fillcolor= bg_color,
     )
     # endregion
 
@@ -540,10 +539,19 @@ def draw_text_vertical(
 
       w_text, h_text = text_size
       # region 4.1: Create temporary image
-      tmp_img = Image.new(
-        mode = 'RGB',
-        size = (w_text, h_text),
-        color = bg_color
+    #   tmp_img = Image.new(
+    #     mode = 'RGBA',
+    #     size = (w_text, h_text),
+    #     color = (0,0,0,0)
+    #   )
+    
+      tmp_img : Image = image.crop(
+          (
+              p_center[0],
+              p_center[1],
+              p_center[0]+ w_text,
+              p_center[1] + h_text
+          )
       )
       # endregion
 
@@ -564,9 +572,20 @@ def draw_text_vertical(
       tmp_img = tmp_img.rotate(
         angle= angle,
         expand= True,
-        fillcolor= bg_color,
+        # fillcolor = bg_color
       )
       # endregion
+
+    #   bbox_crop = image.crop(
+    #       (
+    #           p_center[0],
+    #           p_center[1],
+    #           p_center[0]+ w_text,
+    #           p_center[1] + h_text
+    #       )
+    #   )
+
+    #   new_img = cv2.bitwise_or(np.array(bbox_crop), np.array(tmp_img))
 
       # region 4.4: Paste text
       image.paste(
@@ -579,25 +598,63 @@ def draw_text_vertical(
 
 def _postprocess(
     image_fn: Text,
-    list_dict_result: List[Dict[Text, Any]]
+    list_dict_result: List[Dict[Text, Any]],
+    debug: bool = True
 ):
     # region Create a PIL image and draw each text using the custom font
     if isinstance(image_fn, str):
-        pil_image = Image.open(image_fn)
+        # pil_image = Image.open(image_fn)
         src_img = cv2.imread(image_fn)
     else:
-        pil_image = Image.fromarray(image_fn)
+        # pil_image = Image.fromarray(image_fn)
         src_img = image_fn
-    src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
     h, w = src_img.shape[:2]
+    # src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
+    mask_image = np.zeros((h, w, 3), dtype= np.uint8)
+    black_image = np.full((h, w, 4), [0, 0, 0, 255], dtype=np.uint8)
 
-    mask_image = np.zeros((h, w,3), dtype= np.uint8) * 225
-    draw = ImageDraw.Draw(pil_image)
-
-
+    
     # endregion
 
+    for _dict in list_dict_result:
+        bbox = _dict['bbox']
 
+        # region get mask
+        _mask_image= crop_image_polygon(
+            img = src_img,
+            points= bbox
+        )
+        _mask_image = _mask_image[:, :, np.newaxis] # Add a new axis for the third dimension
+        _mask_image = np.repeat(
+            a = _mask_image,
+            repeats= 3,
+            axis=2
+        )
+        mask_image = cv2.bitwise_or(mask_image, _mask_image)
+        # endregion
+
+        not_masked_image = cv2.bitwise_not(mask_image)
+
+    drawing = np.where(
+        (mask_image[:, :, 0] == 255) & 
+        (mask_image[:, :, 1] == 255) & 
+        (mask_image[:, :, 2] == 255)
+    )
+    black_image[drawing]=[0,0,0,0] # RGBA
+
+    inpaint_img = process_inpaint(
+        image = np.array(src_img),
+        mask = black_image
+    )
+
+    if debug:
+        Image.fromarray(src_img).save("src_img.png")
+        Image.fromarray(mask_image).save("mask_image.png")
+        Image.fromarray(black_image).save("black_image.png")
+        Image.fromarray(inpaint_img).save("inplating.png")
+
+    pil_image = Image.fromarray(inpaint_img)
+    draw = ImageDraw.Draw(pil_image)
     for idx, _dict in enumerate(list_dict_result):
         # print(f"===== IDX: {idx+1} =====")
 
@@ -629,7 +686,7 @@ def _postprocess(
         print("Angle between Line 1 and Line 2 (degrees):", angle)
         # endregion
 
-        # region 3: Create mask for bbox polygon
+        # # region 3: Create mask for bbox polygon
         (tl, tr, br, bl) = bbox
         tl = (int(tl[0]), int(tl[1]))
         tr = (int(tr[0]), int(tr[1]))
@@ -639,19 +696,19 @@ def _postprocess(
 
         x1, y1 = tl
         x2, y2 = br
-        _mask_image= crop_image_polygon(
-            img = src_img,
-            points= bbox
-        )
-        _mask_image = _mask_image[:, :, np.newaxis] # Add a new axis for the third dimension
-        _mask_image = np.repeat(
-            a = _mask_image,
-            repeats= 3,
-            axis=2
-        )
-        mask_image = cv2.bitwise_or(mask_image, _mask_image)
+        # _mask_image= crop_image_polygon(
+        #     img = src_img,
+        #     points= bbox
+        # )
+        # _mask_image = _mask_image[:, :, np.newaxis] # Add a new axis for the third dimension
+        # _mask_image = np.repeat(
+        #     a = _mask_image,
+        #     repeats= 3,
+        #     axis=2
+        # )
+        # mask_image = cv2.bitwise_or(mask_image, _mask_image)
         cropped_image_pil = pil_image.crop((x1, y1, x2, y2))
-        # endregion
+        # # endregion
 
         # region 4. Get backgroud and foregroud color
         c1, c2 = get_bg_fg_color(cropped_image_pil)
@@ -815,17 +872,20 @@ def _postprocess(
         print(f"foreground color: {fg_color}")
         # endregion
 
-        fg_cv = tuple(list(fg_color)[::-1])
-        bg_cv = tuple(list(bg_color)[::-1])
+        # fg_cv = tuple(list(fg_color)[::-1])
+        # bg_cv = tuple(list(bg_color)[::-1])
+
+        fg_cv = fg_color
+        bg_cv = bg_color
 
         # endregion
         
-        # region 5. Create polygon
-        draw.polygon(
-            xy=(tl, tr, br, bl),
-            fill = bg_cv
-        )
-        # endregion
+        # # region 5. Create polygon
+        # draw.polygon(
+        #     xy=(tl, tr, br, bl),
+        #     fill = bg_cv
+        # )
+        # # endregion
 
         # region 6: Calculate height and width in euclidean coordinates
         width = euclidean_distance(tl, tr)
@@ -877,25 +937,28 @@ def _postprocess(
                 width = width,
                 angle= angle,
             )
-        src_img = np.array(pil_image)
+        # src_img = np.array(pil_image)
         
 
-    # region paste background with polygons      
-    cv_img = np.array(pil_image)
-    cv_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
-    cv_img = cv2.bitwise_and(mask_image, cv_img)
+    # # region paste background with polygons      
+    # cv_img = np.array(pil_image)
+    # cv_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+    # cv_img = cv2.bitwise_and(mask_image, cv_img)
     
-    if isinstance(image_fn, str):
-        src_img = cv2.imread(image_fn)
-    else:
-        src_img = image_fn
-        src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
-    src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
-    not_masked_image = cv2.bitwise_not(mask_image)
-    not_src_img = cv2.bitwise_and(not_masked_image, src_img)
-    final_image = cv2.bitwise_or(cv_img, not_src_img)
-    # endregion
-    return Image.fromarray(final_image)
+    # if isinstance(image_fn, str):
+    #     src_img = cv2.imread(image_fn)
+    # else:
+    #     src_img = image_fn
+    #     src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
+    # src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
+    # not_masked_image = cv2.bitwise_not(mask_image)
+    # not_src_img = cv2.bitwise_and(not_masked_image, src_img)
+    # final_image = cv2.bitwise_or(cv_img, not_src_img)
+    # # endregion
+    # return Image.fromarray(final_image)
+    if debug:
+        pil_image.save("final_image.png")
+    return pil_image
 
 
 if __name__ == "__main__":
