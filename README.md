@@ -3,12 +3,16 @@
 
 [Try Demo on our website](https://str-vietnam-temple.vercel.app)
 ## What's new
+
+
 - 27 September 2023 - Version 0.4
     - Rotate the text according to the rotation angle of the bbox.
     - Change the method for determining background and foreground colors.
     - Add time to inference.
     - Add code to run on [Google Colab](https://colab.research.google.com/drive/1BHbTpH1p2AQoqsexOa8nIFXn7q_l-MKS?usp=sharing)
     - [Report](https://drive.google.com/file/d/1kZxKnXpIywnqi4kAFb-roqLnbHNgTs3J/view?usp=sharing)
+    - [Web](https://tools.clc.hcmus.edu.vn/)
+    - [Output](https://drive.google.com/drive/folders/1XYETIJ9BbKvX-RRxP_wOsFIIW137mP4Y?usp=drive_link)
 
 - 11 September 2023 - Version 0.3
     - Skip Latin characters.
@@ -26,11 +30,24 @@
     - Code postprocessing for final output.
 
 ## What's coming next
-
+- Write log
+- Add debug code
+- Add translations Han- Vietnamese
+- Rotate image before process
+- Remove text
+- Classify style -> Define vietnamese's font
+- Mapping color.
+- [What is real image in Vietnamese?](https://xaydungso.vn/noi-that/top-50-mau-cong-chua-dep-hien-dai-nhat-vi-cb.html)
+-> Increment height of text
+- Collect data temple in vietnamese.
 - Train more accurate model detection and recognition text
 - Collect and label datasets.
 - Host on server have GPU.
-
+- Add XAI support
+- Add illustration video like 3Blue1Brown
+- Write thesis
+- Write paper
+- Multimodel for STR
 ## Todo
 ### GUI
 - Show time to inference
