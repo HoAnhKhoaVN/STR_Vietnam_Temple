@@ -8,9 +8,12 @@ __pycache__
 *.gz
 *.zip
 *.ipynb
+*.jpeg
 lib/
 *.log
 *.pt
+*.xlsx
+*.cach
 
 # .txt
 !*.txt
@@ -61,3 +64,5 @@ output/*
 !output/hoang_phi_cau_doi.jpg
 dataset/collect_data/collect_image_temple_to_evaluate/load_cookie.py
 dataset/collect_data/collect_image_temple_to_evaluate/my_cookie.pkl
+dataset/labeling/sac_phong/sua_nhan_sai/Sac Phong Trieu Nguyen.pdf
+dataset/labeling/sac_phong/Sac Phong Trieu Nguyen.pdf
