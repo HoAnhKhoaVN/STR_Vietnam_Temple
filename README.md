@@ -3,7 +3,9 @@
 
 [Try Demo on our website](https://str-vietnam-temple.vercel.app)
 ## What's new
-
+- 11 November 2023 - Version 0.5
+    - New method to get correct background color and foreground color for image.
+    - Added support for predict all image in folder.
 
 - 27 September 2023 - Version 0.4
     - Rotate the text according to the rotation angle of the bbox.
@@ -32,8 +34,6 @@
 ## What's coming next
 - Write log
 - Add debug code
-- Add translations Han- Vietnamese
-- Rotate image before process
 - Remove text
 - Classify style -> Define vietnamese's font
 - Mapping color.
@@ -49,8 +49,10 @@
 - Write paper
 - Multimodel for STR
 ## Todo
+- debug code remove background
+- the size of text increases when rotating
+- the boundaries of boxes have another color ?????
 ### GUI
-- Show time to inference
 - Format log file
 - Delete unnecessary information
 
