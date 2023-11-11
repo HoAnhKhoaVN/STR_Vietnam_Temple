@@ -586,12 +586,13 @@ def _postprocess(
     # region Create a PIL image and draw each text using the custom font
     if isinstance(image_fn, str):
         pil_image = Image.open(image_fn)
-        src_img = cv2.imread(image_fn)
+        src_img = cv2.imread(image_fn) # BGR
+        src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB) # RGB
     else:
-        pil_image = Image.fromarray(image_fn)
-        src_img = image_fn
+        pil_image = Image.fromarray(image_fn) # RGB
+        src_img = image_fn # RGB
 
-    src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB)
+    src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2RGB) # BRG
     h, w = src_img.shape[:2]
 
     mask_image = np.zeros((h, w,3), dtype= np.uint8)

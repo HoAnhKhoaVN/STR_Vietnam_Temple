@@ -30,7 +30,7 @@ def predict():
     content_image = Image.open(content_file).convert('RGB')
 
     _input = array(content_image)
-    pil_image, _= process(_input)
+    pil_image, _= pro=cess(_input)
     response = jsonify({'processed_image': pil_to_base64(pil_image)})
     response.headers.add('Access-Control-Allow-Origin', '*')  # Cho phép truy cập từ domain của frontend
     return response

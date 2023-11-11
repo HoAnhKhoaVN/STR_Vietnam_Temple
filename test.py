@@ -1,5 +1,6 @@
 import os
-from my_postprocess.postprocess_rm_bg import _postprocess
+# from my_postprocess.postprocess_rm_bg import _postprocess
+from my_postprocess.postprocess_img_process import _postprocess
 
 if __name__ == "__main__":
 

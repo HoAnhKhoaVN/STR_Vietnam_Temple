@@ -111,17 +111,25 @@ def main():
     
     ap.add_argument("-o", "--output", required=True,
         help="Đường dẫn đến ảnh kết quả")
+
+    ap.add_argument("-m", "--mode", required=True,
+        help="Phương pháp hậu xử lý. img_process hoặc ")
     args = vars(ap.parse_args())
 
     _INPUT = args["input"]
     _OUTPUT = args["output"]
     
-    logging.info("================================")
-    logging.info(f"Input: {_INPUT}")
-    logging.info(f"Output: {_OUTPUT}")
+    # logging.info("================================")
+    # logging.info(f"Input: {_INPUT}")
+    # logging.info(f"Output: {_OUTPUT}")
+
+
+    print("================================")
+    print(f"Input: {_INPUT}")
+    print(f"Output: {_OUTPUT}")
     # endregion Input
 
-    pil_img_output, time_analysis = process(image_input_file=_INPUT)
+    pil_img_output, time_analysis = process(image_input_file=_INPUT, mode_postprocess=args['mode'] )
 
     # region output
     pil_img_output.save(_OUTPUT)
@@ -132,10 +140,10 @@ def main():
     print(time_analysis)
 
     # endregion
-    logging.info("==============END TASK==================")
+    print("==============END TASK==================")
 
 if __name__ == "__main__":
-    # main()
+    main()
 
     # img: Image = process(
     #     image_input_file="D:/Master/OCR_Nom/fulllow_ocr_temple/input/365277540_2640178542812959_3109842896588336028_n.jpg"
@@ -151,7 +159,7 @@ if __name__ == "__main__":
     # IMG_NAME = '1923962_1370238453082504_4224712044219484343_n'
     # IMG_NAME = '366641616_2264556887067173_1651877982799532575_n'
     # IMG_NAME = '18278972_297318970702821_2600128763625419236_o'
-    IMG_NAME = 'cau_doi_1'
+    # IMG_NAME = 'cau_doi_1'
     # IMG_NAME = "test_image"
     # IMG_NAME = "14718859_208204472925484_1150455697377965541_n"
     # IMG_NAME = '13718780_847719332039821_170320190789157617_n'
@@ -160,9 +168,9 @@ if __name__ == "__main__":
     #     image_input_file=f"input/{IMG_NAME}.jpg",
     # )
 
-    img, time_analysis = process(
-        image_input_file=f'input/{IMG_NAME}.jpg',
-    )
-    img.save(f'output/{IMG_NAME}.jpg')
+    # img, time_analysis = process(
+    #     image_input_file=f'input/{IMG_NAME}.jpg',
+    # )
+    # img.save(f'output/{IMG_NAME}_img_process.jpg')
 
-    print(f'Time analysis: {time_analysis}')
+    # print(f'Time analysis: {time_analysis}')
