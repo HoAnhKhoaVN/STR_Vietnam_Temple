@@ -5,6 +5,8 @@ from copy import deepcopy
 from typing import Text, List, Dict, Any, Tuple
 from PIL import Image, ImageFont, ImageDraw
 from pylette.color_extraction import get_bg_fg_color
+from rotation.detect_rectangle_box import detect_and_crop_image
+from rotation.rotate_image import rotate_image
 from translate_to_modern_vietnamese.translate_to_modern_vietnamese import translate_to_modern_vietnamese
 # from log.logger import setup_logger
 import logging
@@ -690,141 +692,46 @@ def _postprocess(
         print("Angle between Line 1 and Line 2 (degrees):", angle)
         # endregion
 
-        # # region 3: Create mask for bbox polygon
+        # region : Create mask for bbox polygon
         (tl, tr, br, bl) = bbox
         tl = (int(tl[0]), int(tl[1]))
         tr = (int(tr[0]), int(tr[1]))
         br = (int(br[0]), int(br[1]))
         bl = (int(bl[0]), int(bl[1]))
 
+        _mask_image, crop_img= crop_image_polygon(
+            img = src_img,
+            points= bbox
+        )
+        _mask_image = _mask_image[:, :, np.newaxis] # Add a new axis for the third dimension
+        _mask_image = np.repeat(
+            a = _mask_image,
+            repeats= 3,
+            axis=2
+        )
+        mask_image = cv2.bitwise_or(mask_image, _mask_image)
+        rotate_img = rotate_image(
+            image= crop_img,
+            angle= -angle,
+        )
+        cropped_image_pil = detect_and_crop_image(img = rotate_img)
+        # endregion
 
-        x1, y1 = tl
-        x2, y2 = br
-        # _mask_image= crop_image_polygon(
-        #     img = src_img,
-        #     points= bbox
-        # )
-        # _mask_image = _mask_image[:, :, np.newaxis] # Add a new axis for the third dimension
-        # _mask_image = np.repeat(
-        #     a = _mask_image,
-        #     repeats= 3,
-        #     axis=2
-        # )
-        # mask_image = cv2.bitwise_or(mask_image, _mask_image)
-        cropped_image_pil = pil_image.crop((x1, y1, x2, y2))
-        # # endregion
-
-        # region 4. Get backgroud and foregroud color
+        # region : Get backgroud and foregroud color
         c1, c2 = get_bg_fg_color(cropped_image_pil)
-        
-
-        # region calculate average value of 4 pixel
-        # region get line
-        a_tl_tr, b_tl_tr = get_para_in_line(tl, tr)
-        a_bl_br, b_bl_br = get_para_in_line(bl, br)
-        a_tr_br, b_tr_br = get_para_in_line(tr, br)
-        a_tl_bl, b_tl_bl = get_para_in_line(tl, bl)
-        # endregion
-        N = 500
-        # region get 10 points in line top left, top right -> x -> y
-        x_tl, x_tr = tl[0], tr[0]
-        delta_x = np.abs(x_tl - x_tr)
-        kc_x = delta_x / (N +1)
-        tmp_x = x_tl
-        tmp_x_arr = []
-        for _ in range(N):
-            tmp_x+=int(kc_x)
-            tmp_x_arr.append(tmp_x)
-        
-        tmp_y_arr = []
-        for x in tmp_x_arr:
-            tmp_y = int(a_tl_tr * x + b_tl_tr)
-            tmp_y_arr.append(tmp_y)
-
-        lst_point_in_line_tl_tr= [[x, y] for x, y in zip(tmp_y_arr, tmp_x_arr)]
-        # endregion
-            
-        # region get 10 points in line bottom left, bottom right
-        x_bl, x_br = bl[0], br[0]
-        delta_x = np.abs(x_bl - x_br)
-        kc_x = delta_x / (N +1)
-        tmp_x = x_bl
-        tmp_x_arr = []
-        for _ in range(N):
-            tmp_x+=int(kc_x)
-            tmp_x_arr.append(tmp_x)
-        
-        tmp_y_arr = []
-        for x in tmp_x_arr:
-            tmp_y = int(a_bl_br * x + b_bl_br)
-            tmp_y_arr.append(tmp_y)
-
-        lst_point_in_line_bl_br= [[x, y] for x, y in zip(tmp_y_arr, tmp_x_arr)]
-
-        # endregion
-
-        # region get 10 points in line top left, bottom left
-        y_tl, y_bl = tl[1], bl[1]
-        delta_y = np.abs(y_tl - y_bl)
-        kc_y = delta_y / (N + 1)
-        tmp_y = y_tl
-        tmp_y_arr = []
-        for _ in range(N):
-            tmp_y+=int(kc_y)
-            tmp_y_arr.append(tmp_y)
-        
-        tmp_x_arr = []
-        for y in tmp_y_arr:
-            tmp_x = int((y - b_tl_bl)/a_tl_bl)
-            tmp_x_arr.append(tmp_x)
-
-        lst_point_in_line_tl_bl= [[x, y] for x, y in zip(tmp_y_arr, tmp_x_arr)]
-        # endregion
-
-        # region get 10 points in line top right , bottom right
-        y_tr, y_br = tr[1], br[1]
-        delta_y = np.abs(y_tr - y_br)
-        kc_y = delta_y / (N + 1)
-        tmp_y = y_tr
-        tmp_y_arr = []
-        for _ in range(N):
-            tmp_y+=int(kc_y)
-            tmp_y_arr.append(tmp_y)
-        
-        tmp_x_arr = []
-        for y in tmp_y_arr:
-            tmp_x = int((y - b_tr_br)/a_tr_br)
-            tmp_x_arr.append(tmp_x)
-
-        lst_point_in_line_tr_br= [[x, y] for x, y in zip(tmp_y_arr, tmp_x_arr)]
-        # endregion
-
-        # region get all points
-        points = [
-            [tl[1], tl[0]],
-            [tr[1], tr[0]],
-            [br[1], br[0]],
-            [bl[1], bl[0]]
-        ]
-
-        points.extend(lst_point_in_line_tl_tr)
-        points.extend(lst_point_in_line_bl_br)
-        points.extend(lst_point_in_line_tl_bl)
-        points.extend(lst_point_in_line_tr_br)
-
-        print(f'Length points: {len(points)}')
-        # endregion
-
-        # region get RGB color from points
-        lst_rgb = []
-        for p in points:
-            lst_rgb.append(src_img[p[0],p[1]])
-        np_rgb  = np.array(lst_rgb)
-        # endregion
+        H, W = cropped_image_pil.shape[:2]
+        np_rgb = np.vstack(
+            tup = (
+                cropped_image_pil[0, :, :],
+                cropped_image_pil[H-1, :, :],
+                cropped_image_pil[:, 0, :],
+                cropped_image_pil[:, W-1, :]
+            )
+        )
 
         # region get mean RBG
         mean_corner_pixel = np.mean(
-           np_rgb, axis=0
+            np_rgb, axis= 0
         )
         d_c1 = euclidean_distance(
             a = mean_corner_pixel,
@@ -844,43 +751,11 @@ def _postprocess(
         print(f"Mean pixel: {mean_corner_pixel}")
         # endregion
 
-        # # region Calculate distance each region color with background and foreground color
-        # bool_color = [True if euclidean_distance(c, c1) < euclidean_distance(c, c2) else False for c in np_rgb]
-        # c1_point = sum(bool_color)
-        # c2_point = len(points) - c1_point
-        # print(f'c1_point: {c1_point}')
-        # print(f'c2_point: {c2_point}')
-        # if c1_point > c2_point:
-        #     bg_color = c1
-        #     fg_color = c2
-        # else:
-        #     bg_color = c2
-        #     fg_color = c1
-        # # endregion
-
-        # # region voting RGB
-        # bool_color = [voting_rgb(c1, c2, cx) for cx in np_rgb]
-        # c1_point = sum(bool_color)
-        # c2_point = len(points) - c1_point
-        # print(f'c1_point: {c1_point}')
-        # print(f'c2_point: {c2_point}')
-        # if c1_point > c2_point:
-        #     bg_color = c1
-        #     fg_color = c2
-        # else:
-        #     bg_color = c2
-        #     fg_color = c1
-        # # endregion
-
         print(f"Background color: {bg_color}")
         print(f"foreground color: {fg_color}")
-        # endregion
-
-        # fg_cv = tuple(list(fg_color)[::-1])
-        # bg_cv = tuple(list(bg_color)[::-1])
-
         fg_cv = fg_color
         bg_cv = bg_color
+        # endregion
 
         # endregion
         
