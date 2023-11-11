@@ -620,7 +620,7 @@ def _postprocess(
         bbox = _dict['bbox']
 
         # region get mask
-        _mask_image= crop_image_polygon(
+        _mask_image, _ = crop_image_polygon(
             img = src_img,
             points= bbox
         )

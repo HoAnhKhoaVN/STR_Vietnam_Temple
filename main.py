@@ -3,7 +3,7 @@ import os
 from utils.check_language import is_han_nom
 from my_ocr.pp_ocr.test import ocr
 from translate.hcmus_api import hcmus_translate
-from my_postprocess.postprocess import _postprocess
+from my_postprocess import postprocess_rm_bg, postprocess_img_process
 import logging
 from typing import Text
 from PIL import Image
@@ -13,8 +13,21 @@ from time import time
 
 def process(
     image_input_file: Text,
+    mode_postprocess: Text = 'img_process',
     silent: bool = False
 )-> Image:
+    '''
+    Function that processes a given image in Han-Nom and returns image in Vietnamese
+    
+    Parameters:
+    - image_input_file: Path to input image
+    - mode_postprocess: Whether to postprocess the image
+        + 'img_process': Using image processing to process the image'
+        + 'rm_bg': Cleaning the background image and blending text into the image
+    - silent: Whether to show notifications
+
+    Returns: new image in Vietnamese
+    '''
     time_analysis = dict()
     # region Preprocessing
     # endregion Preprocessing
@@ -68,10 +81,17 @@ def process(
 
     # region postprocessing
     start_time = time()
-    pil_img_output = _postprocess(
-        image_fn= image_input_file,
-        list_dict_result = list_dict_result,
-    )
+    if mode_postprocess == 'rm_bg':
+        pil_img_output = postprocess_rm_bg._postprocess(
+            image_fn= image_input_file,
+            list_dict_result = list_dict_result,
+        )
+    else:# Default: using image processing
+        pil_img_output = postprocess_img_process._postprocess(
+            image_fn= image_input_file,
+            list_dict_result = list_dict_result,
+        )
+
     end_time = time()
     time_analysis['postprocess_time'] = end_time - start_time
     # endregion
